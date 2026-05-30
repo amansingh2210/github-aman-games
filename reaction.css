@@ -1,0 +1,284 @@
+/* --- Reaction Speed Layout & States --- */
+
+/* HUD Stat Indicators */
+.game-hud {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2px;
+}
+
+/* Tap Container & Box */
+.tap-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px;
+  margin-bottom: 24px;
+}
+
+.tap-area {
+  width: 100%;
+  height: 280px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  user-select: none;
+  outline: none;
+}
+
+.tap-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+}
+
+.tap-icon {
+  width: 48px;
+  height: 48px;
+  fill: currentColor;
+  transition: transform var(--transition-normal);
+}
+
+.tap-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.tap-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* State 1: Idle (Ready to start) */
+.state-idle {
+  background: rgba(0, 242, 254, 0.06);
+  border: 1px dashed rgba(0, 242, 254, 0.35);
+  color: var(--accent-cyan);
+}
+
+.state-idle:hover {
+  background: rgba(0, 242, 254, 0.12);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+}
+
+.state-idle .tap-icon {
+  animation: float-icon 2s infinite ease-in-out alternate;
+}
+
+/* State 2: Waiting (Red screen - wait for green) */
+.state-waiting {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #ef4444;
+  cursor: wait;
+}
+
+.state-waiting .tap-desc {
+  color: rgba(239, 68, 68, 0.7);
+}
+
+/* State 3: Ready (Green screen - TAP NOW!) */
+.state-ready {
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.15), 0 0 20px rgba(16, 185, 129, 0.25);
+  animation: pulse-ready 0.5s infinite alternate ease-in-out;
+}
+
+.state-ready .tap-desc {
+  color: #fff;
+  font-weight: 600;
+}
+
+.state-ready .tap-icon {
+  transform: scale(1.15);
+}
+
+/* State 4: Result (Violet - shows milliseconds) */
+.state-result {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  color: #fff;
+}
+
+.state-result .tap-title {
+  font-size: 2.8rem;
+  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+.state-result .tap-desc {
+  color: var(--text-muted);
+}
+
+/* State 5: Early (Orange - click too early error) */
+.state-early {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: var(--accent-yellow);
+}
+
+.state-early .tap-desc {
+  color: var(--text-muted);
+}
+
+/* Detailed Logs */
+.details-section {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.attempts-log {
+  padding: 16px 20px;
+}
+
+.panel-title {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 8px;
+}
+
+.log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.empty-log {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 16px 0;
+  line-height: 1.5;
+}
+
+.log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  transition: background var(--transition-fast);
+}
+
+.log-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.log-num {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.log-val {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.log-val.success {
+  color: var(--accent-cyan);
+}
+
+.log-val.fail {
+  color: #ef4444;
+}
+
+.reaction-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Animations */
+@keyframes float-icon {
+  from { transform: translateY(0); }
+  to { transform: translateY(-5px); }
+}
+
+@keyframes pulse-ready {
+  from { box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+  to { box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+}
+
+/* Scrollbar customization */
+.log-list::-webkit-scrollbar {
+  width: 4px;
+}
+.log-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.log-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* Responsive Scaling */
+@media (max-width: 550px) {
+  .game-hud, .tap-container, .details-section {
+    max-width: 90vw;
+  }
+  .tap-area {
+    height: 240px;
+  }
+  .tap-title {
+    font-size: 1.4rem;
+  }
+  .state-result .tap-title {
+    font-size: 2.2rem;
+  }
+  .tap-desc {
+    font-size: 0.8rem;
+  }
+}

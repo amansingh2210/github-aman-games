@@ -1,0 +1,275 @@
+/* --- Tic Tac Toe Layout & Components --- */
+
+/* Segmented Control (Toggle Switches) */
+.game-settings {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.setting-label {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--panel-border);
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.segmented-control button {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.segmented-control button.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#difficulty-group .diff-btn.active {
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+#mode-ai.active, #mode-pvp.active {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+/* Scoreboard */
+.scoreboard-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.score-card {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.score-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+
+.player-x-score::before { background: var(--accent-cyan); }
+.ties-score::before { background: var(--text-dim); }
+.player-o-score::before { background: var(--accent-pink); }
+
+.score-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.score-val {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* Status Banner */
+.status-banner {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px 20px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  transition: all var(--transition-fast);
+}
+
+.status-banner.x-turn {
+  color: var(--accent-cyan);
+  border-color: rgba(0, 242, 254, 0.2);
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+.status-banner.o-turn {
+  color: var(--accent-pink);
+  border-color: rgba(248, 87, 166, 0.2);
+  text-shadow: 0 0 10px rgba(248, 87, 166, 0.3);
+}
+
+/* Board Layout */
+.board-container {
+  padding: 16px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  width: 320px;
+  height: 320px;
+  max-width: 85vw;
+  max-height: 85vw;
+}
+
+/* Cells */
+.board-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.board-cell:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Hover highlights corresponding to player turns */
+.game-board.player-x-turn .board-cell:empty:hover {
+  border-color: rgba(0, 242, 254, 0.3);
+  box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.1), 0 0 10px rgba(0, 242, 254, 0.1);
+}
+
+.game-board.player-o-turn .board-cell:empty:hover {
+  border-color: rgba(248, 87, 166, 0.3);
+  box-shadow: inset 0 0 15px rgba(248, 87, 166, 0.1), 0 0 10px rgba(248, 87, 166, 0.1);
+}
+
+/* Marker graphics inside cells */
+.board-cell svg {
+  width: 65%;
+  height: 65%;
+  overflow: visible;
+}
+
+/* Line-drawing keyframe trigger */
+.draw-path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-stroke 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.x-path {
+  stroke: var(--accent-cyan);
+  filter: drop-shadow(0 0 5px rgba(0, 242, 254, 0.6));
+}
+
+.o-path {
+  stroke: var(--accent-pink);
+  filter: drop-shadow(0 0 5px rgba(248, 87, 166, 0.6));
+}
+
+@keyframes draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Winning combination highlight */
+.board-cell.winner {
+  animation: win-pulse 1.2s infinite ease-in-out alternate;
+}
+
+.board-cell.winner.x-cell {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+}
+
+.board-cell.winner.o-cell {
+  background: rgba(248, 87, 166, 0.15);
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 20px rgba(248, 87, 166, 0.4);
+}
+
+@keyframes win-pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.04);
+  }
+}
+
+/* Control buttons group at bottom */
+.game-actions {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+}
+
+/* Responsive adjust */
+@media (max-width: 550px) {
+  .game-settings, .scoreboard-container, .status-banner, .game-actions {
+    max-width: 90vw;
+  }
+  .setting-label {
+    font-size: 0.75rem;
+  }
+  .segmented-control button {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+  .score-label {
+    font-size: 0.65rem;
+  }
+  .score-val {
+    font-size: 1.15rem;
+  }
+}

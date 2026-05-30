@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aman's Arcade - Play Free Web Games</title>
+  <meta name="description" content="Play free, retro neon-themed HTML5 games including Tic Tac Toe, Memory Flip, and Reaction Speed. Beautiful, mobile-responsive, and sound-enabled.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Hero/Banner Layout */
+    .hero-section {
+      text-align: center;
+      margin: 40px 0 30px;
+      position: relative;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: relative;
+    }
+    
+    .hero-title span {
+      background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: neon-text-glow 6s infinite alternate;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Stats Dashboard */
+    .stats-dashboard {
+      width: 100%;
+      max-width: 1000px;
+      padding: 24px;
+      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+
+    .stat-card {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform var(--transition-fast);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Game Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 60px;
+    }
+
+    /* Game Cards Styling */
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--card-color);
+      box-shadow: 0 2px 10px var(--card-color);
+    }
+
+    .game-card-preview {
+      height: 180px;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    /* Previews SVGs animations */
+    .game-card-preview svg {
+      width: 100px;
+      height: 100px;
+      transition: transform var(--transition-slow);
+    }
+    
+    .game-card:hover .game-card-preview svg {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Game Card Contents */
+    .game-card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .game-title {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .game-badge {
+      font-size: 0.7rem;
+      font-family: var(--font-body);
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      color: #fff;
+      text-transform: uppercase;
+      background: var(--card-color);
+      box-shadow: 0 0 10px rgba(var(--card-color-rgb), 0.4);
+    }
+
+    .game-description {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+
+    .game-stats-peek {
+      border-top: 1px dashed rgba(255, 255, 255, 0.06);
+      padding-top: 12px;
+      margin-bottom: 20px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .game-card .btn-primary::before {
+      background: var(--card-gradient);
+    }
+    
+    .game-card:hover {
+      box-shadow: 0 12px 30px rgba(var(--card-color-rgb), 0.12);
+      border-color: rgba(var(--card-color-rgb), 0.25);
+      transform: translateY(-5px);
+    }
+
+    /* Footer */
+    .arcade-footer {
+      margin-top: auto;
+      padding: 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      width: 100%;
+    }
+
+    /* Tic Tac Toe Preview Drawing Animation */
+    .preview-ttt-x {
+      stroke: var(--accent-cyan);
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: draw-preview 2s ease-in-out infinite alternate;
+    }
+    .preview-ttt-o {
+      stroke: var(--accent-pink);
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: draw-preview 2s ease-in-out infinite alternate 0.5s;
+    }
+    .preview-ttt-grid {
+      stroke: var(--text-dim);
+      opacity: 0.3;
+    }
+
+    /* Memory Card Animation Preview */
+    .preview-memory-card {
+      fill: rgba(139, 92, 246, 0.2);
+      stroke: var(--accent-purple);
+      stroke-width: 2;
+      rx: 8;
+      transition: transform 0.5s;
+      transform-origin: center;
+    }
+    .preview-memory-g {
+      animation: preview-card-flip 3s infinite alternate ease-in-out;
+      transform-origin: center;
+    }
+
+    /* Reaction Flash Animation Preview */
+    .preview-reaction-flash {
+      fill: rgba(16, 185, 129, 0.15);
+      stroke: var(--accent-green);
+      stroke-width: 2;
+      rx: 50%;
+      animation: pulse-green 2s infinite alternate;
+    }
+
+    @keyframes draw-preview {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes preview-card-flip {
+      0%, 30% { transform: rotateY(0deg); }
+      70%, 100% { transform: rotateY(180deg); }
+    }
+    @keyframes pulse-green {
+      0% { fill: rgba(16, 185, 129, 0.1); filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.2)); }
+      100% { fill: rgba(16, 185, 129, 0.35); filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.7)); }
+    }
+
+    /* --- Responsive Queries --- */
+    @media (max-width: 900px) {
+      .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .stats-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-dashboard {
+        grid-template-columns: 2fr 2fr;
+        padding: 16px;
+      }
+      .hero-title {
+        font-size: 2.3rem;
+      }
+      .hero-section {
+        margin: 20px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <div class="arcade-logo">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+      </svg>
+      AMAN'S ARCADE
+    </div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Hero Banner -->
+    <section class="hero-section fade-in">
+      <h1 class="hero-title">PLAY NEON <span>ARCADE</span></h1>
+      <p class="hero-subtitle">Premium mini-games right in your browser. Mobile & desktop friendly, completely free, with rich sound effects and instant loading.</p>
+    </section>
+
+    <!-- Global Stats Dashboard -->
+    <section class="stats-dashboard glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="stat-card">
+        <div class="stat-value" id="stats-total-played">0</div>
+        <div class="stat-label">Total Plays</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stats-ttt-wins">0 - 0</div>
+        <div class="stat-label">Tic Tac Toe (X/O)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stats-memory-best">--</div>
+        <div class="stat-label">Best Memory Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stats-reaction-best">--</div>
+        <div class="stat-label">Best Reaction</div>
+      </div>
+    </section>
+
+    <!-- Game List Grid -->
+    <section class="games-grid fade-in" style="animation-delay: 0.2s;">
+      
+      <!-- Tic Tac Toe -->
+      <article class="game-card glass-panel" style="--card-color: var(--accent-cyan); --card-color-rgb: var(--accent-cyan-rgb); --card-gradient: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);">
+        <div class="game-card-preview">
+          <svg viewBox="0 0 100 100">
+            <line class="preview-ttt-grid" x1="33" y1="10" x2="33" y2="90" stroke-width="2" stroke-linecap="round"/>
+            <line class="preview-ttt-grid" x1="66" y1="10" x2="66" y2="90" stroke-width="2" stroke-linecap="round"/>
+            <line class="preview-ttt-grid" x1="10" y1="33" x2="90" y2="33" stroke-width="2" stroke-linecap="round"/>
+            <line class="preview-ttt-grid" x1="10" y1="66" x2="90" y2="66" stroke-width="2" stroke-linecap="round"/>
+            <!-- X Shape -->
+            <path class="preview-ttt-x" d="M15,15 L28,28 M28,15 L15,28" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <!-- O Shape -->
+            <circle class="preview-ttt-o" cx="50" cy="50" r="8" stroke-width="4" fill="none"/>
+            <!-- X Shape -->
+            <path class="preview-ttt-x" d="M72,72 L85,85 M85,72 L72,85" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="game-card-body">
+          <h2 class="game-title">Tic Tac Toe <span class="game-badge">Classic</span></h2>
+          <p class="game-description">Play locally with a friend, or challenge our smart AI engine featuring multiple difficulties up to an Unbeatable algorithm.</p>
+          <div class="game-stats-peek">
+            <span>Your Wins: <strong id="peek-ttt-wins">0</strong></span>
+            <span>Ties: <strong id="peek-ttt-ties">0</strong></span>
+          </div>
+          <a href="tictactoe.html" class="btn-primary">PLAY GAME</a>
+        </div>
+      </article>
+
+      <!-- Memory Flip -->
+      <article class="game-card glass-panel" style="--card-color: var(--accent-purple); --card-color-rgb: var(--accent-purple-rgb); --card-gradient: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);">
+        <div class="game-card-preview">
+          <svg viewBox="0 0 100 100">
+            <g class="preview-memory-g">
+              <rect class="preview-memory-card" x="35" y="30" width="30" height="40" />
+              <!-- Small question mark inside card back -->
+              <text x="50" y="55" fill="var(--accent-pink)" font-family="monospace" font-size="14" text-anchor="middle" font-weight="bold">?</text>
+            </g>
+          </svg>
+        </div>
+        <div class="game-card-body">
+          <h2 class="game-title">Memory Flip <span class="game-badge">Puzzle</span></h2>
+          <p class="game-description">Find matching pairs of retro arcade icons in a responsive 3D card layout. Keep track of your flipping speed and moves count.</p>
+          <div class="game-stats-peek">
+            <span>Best Moves: <strong id="peek-memory-moves">--</strong></span>
+            <span>Best Time: <strong id="peek-memory-time">--</strong></span>
+          </div>
+          <a href="memory.html" class="btn-primary">PLAY GAME</a>
+        </div>
+      </article>
+
+      <!-- Reaction Speed -->
+      <article class="game-card glass-panel" style="--card-color: var(--accent-green); --card-color-rgb: var(--accent-green-rgb); --card-gradient: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);">
+        <div class="game-card-preview">
+          <svg viewBox="0 0 100 100">
+            <circle class="preview-reaction-flash" cx="50" cy="50" r="28" />
+            <!-- Lightning Bolt -->
+            <path d="M52 28L40 48H48L46 72L60 44H50L52 28Z" fill="var(--text-main)" filter="drop-shadow(0 0 5px rgba(255,255,255,0.8))"/>
+          </svg>
+        </div>
+        <div class="game-card-body">
+          <h2 class="game-title">Reaction Speed <span class="game-badge">Reflex</span></h2>
+          <p class="game-description">Measure your clicking and tapping reaction time down to the millisecond. Keep an eye on your recent stats and historical averages.</p>
+          <div class="game-stats-peek">
+            <span>Fastest: <strong id="peek-reaction-best">--</strong></span>
+            <span>Avg Reaction: <strong id="peek-reaction-avg">--</strong></span>
+          </div>
+          <a href="reaction.html" class="btn-primary">PLAY GAME</a>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer class="arcade-footer">
+    <p>&copy; 2026 Aman's Arcade. Designed with high-performance CSS and HTML5 Web Audio. Free to host and play.</p>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    // --- Dashboard Stats Loading & Persistence ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Fetch Tic Tac Toe Stats
+      const tttWinsX = parseInt(localStorage.getItem('ttt-wins-x') || '0', 10);
+      const tttWinsO = parseInt(localStorage.getItem('ttt-wins-o') || '0', 10);
+      const tttDraws = parseInt(localStorage.getItem('ttt-draws') || '0', 10);
+      
+      document.getElementById('stats-ttt-wins').innerText = `${tttWinsX} - ${tttWinsO}`;
+      document.getElementById('peek-ttt-wins').innerText = tttWinsX;
+      document.getElementById('peek-ttt-ties').innerText = tttDraws;
+
+      // 2. Fetch Memory Stats
+      const memoryBestTime = localStorage.getItem('memory-best-time');
+      const memoryBestMoves = localStorage.getItem('memory-best-moves');
+      if (memoryBestTime) {
+        document.getElementById('stats-memory-best').innerText = `${memoryBestTime}s`;
+        document.getElementById('peek-memory-time').innerText = `${memoryBestTime}s`;
+      }
+      if (memoryBestMoves) {
+        document.getElementById('peek-memory-moves').innerText = memoryBestMoves;
+      }
+
+      // 3. Fetch Reaction Stats
+      const reactionBest = localStorage.getItem('reaction-best-score');
+      const reactionAvg = localStorage.getItem('reaction-avg-score');
+      if (reactionBest) {
+        document.getElementById('stats-reaction-best').innerText = `${reactionBest}ms`;
+        document.getElementById('peek-reaction-best').innerText = `${reactionBest}ms`;
+      }
+      if (reactionAvg) {
+        document.getElementById('peek-reaction-avg').innerText = `${reactionAvg}ms`;
+      }
+
+      // 4. Calculate total plays across all games
+      const tttGames = tttWinsX + tttWinsO + tttDraws;
+      const memoryGames = parseInt(localStorage.getItem('memory-total-played') || '0', 10);
+      const reactionGames = parseInt(localStorage.getItem('reaction-total-played') || '0', 10);
+      const totalGames = tttGames + memoryGames + reactionGames;
+      document.getElementById('stats-total-played').innerText = totalGames;
+
+      // Play click sound on game links
+      document.querySelectorAll('.games-grid a').forEach(link => {
+        link.addEventListener('click', () => {
+          if (typeof arcadeSounds !== 'undefined') {
+            arcadeSounds.playClick();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

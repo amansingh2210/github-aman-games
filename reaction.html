@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction Speed - Aman's Arcade</title>
+  <meta name="description" content="Test your click/tap reaction speed down to the millisecond. Check your average score and personal best. Mobile-friendly and retro styled.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reaction.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">REACTION SPEED</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- HUD Panel -->
+    <section class="game-hud glass-panel fade-in">
+      <div class="hud-item">
+        <span class="hud-label">Best Speed</span>
+        <span class="hud-val" id="hud-best-reaction">--</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Average</span>
+        <span class="hud-val" id="hud-avg-reaction">--</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Attempts</span>
+        <span class="hud-val" id="hud-attempts">0 / 5</span>
+      </div>
+    </section>
+
+    <!-- Tap testing Area -->
+    <section class="tap-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="tap-area state-idle" id="tap-area" role="button" tabindex="0">
+        <div class="tap-content">
+          <!-- Icon -->
+          <svg class="tap-icon" viewBox="0 0 24 24" id="tap-icon">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+          <h2 class="tap-title" id="tap-title">Click to Start</h2>
+          <p class="tap-desc" id="tap-desc">Tap or click anywhere in this panel to begin the test.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Logs & Actions -->
+    <section class="details-section fade-in" style="animation-delay: 0.15s;">
+      
+      <!-- Recent attempts panel -->
+      <div class="attempts-log glass-panel">
+        <h3 class="panel-title">Recent Attempts</h3>
+        <div class="log-list" id="log-list">
+          <div class="empty-log">No attempts yet. Complete 5 turns to calculate an official average!</div>
+        </div>
+      </div>
+
+      <div class="reaction-actions">
+        <button class="btn-secondary" id="btn-reset-stats">RESET STATS</button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="reaction.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Flip - Aman's Arcade</title>
+  <meta name="description" content="Match retro arcade pairs in this beautiful 3D Memory Flip game. Sound-enabled, responsive, and keeps track of your best time and moves.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="memory.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">MEMORY FLIP</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- HUD Panel -->
+    <section class="game-hud glass-panel fade-in">
+      <div class="hud-item">
+        <span class="hud-label">Moves</span>
+        <span class="hud-val" id="hud-moves">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Time</span>
+        <span class="hud-val" id="hud-time">00:00</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Best Time</span>
+        <span class="hud-val" id="hud-best-time">--</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Best Moves</span>
+        <span class="hud-val" id="hud-best-moves">--</span>
+      </div>
+    </section>
+
+    <!-- Card Grid -->
+    <section class="grid-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="card-grid" id="card-grid">
+        <!-- Cards will be generated dynamically in JS -->
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.15s;">
+      <button class="btn-primary" id="btn-restart">NEW GAME</button>
+      <button class="btn-secondary" id="btn-reset-best">RESET BEST</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="memory.js"></script>
+</body>
+</html>
