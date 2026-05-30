@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Touch controls listeners
   const registerTouch = (el, dir) => {
     el.addEventListener('touchstart', (e) => {
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
       setDirection(dir);
     });
     el.addEventListener('mousedown', () => {
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = '#00f2fe';
         ctx.beginPath();
         // Rounded corners for head
-        ctx.roundRect(x + 1, y + 1, GRID_SIZE - 2, GRID_SIZE - 2, 6);
+        drawRoundRect(ctx, x + 1, y + 1, GRID_SIZE - 2, GRID_SIZE - 2, 6);
         ctx.fill();
 
         // Little eyes
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Linear interpolation color
         ctx.fillStyle = `rgba(139, 92, 246, ${1 - ratio * 0.6})`;
         ctx.beginPath();
-        ctx.roundRect(x + 2, y + 2, GRID_SIZE - 4, GRID_SIZE - 4, 4);
+        drawRoundRect(ctx, x + 2, y + 2, GRID_SIZE - 4, GRID_SIZE - 4, 4);
         ctx.fill();
       }
       ctx.restore();
@@ -403,5 +403,34 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fill();
       ctx.restore();
     });
+  }
+
+  function drawRoundRect(ctx, x, y, w, h, r) {
+    let rTopLeft = 0, rTopRight = 0, rBottomRight = 0, rBottomLeft = 0;
+    if (typeof r === 'number') {
+      rTopLeft = rTopRight = rBottomRight = rBottomLeft = r;
+    } else if (Array.isArray(r)) {
+      rTopLeft = r[0] !== undefined ? r[0] : 0;
+      rTopRight = r[1] !== undefined ? r[1] : 0;
+      rBottomRight = r[2] !== undefined ? r[2] : 0;
+      rBottomLeft = r[3] !== undefined ? r[3] : 0;
+    } else if (typeof r === 'object') {
+      rTopLeft = r.tl !== undefined ? r.tl : 0;
+      rTopRight = r.tr !== undefined ? r.tr : 0;
+      rBottomRight = r.br !== undefined ? r.br : 0;
+      rBottomLeft = r.bl !== undefined ? r.bl : 0;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(x + rTopLeft, y);
+    ctx.lineTo(x + w - rTopRight, y);
+    ctx.arcTo(x + w, y, x + w, y + rTopRight, rTopRight);
+    ctx.lineTo(x + w, y + h - rBottomRight, rBottomRight);
+    ctx.arcTo(x + w, y + h, x + w - rBottomRight, y + h, rBottomRight);
+    ctx.lineTo(x + rBottomLeft, y + h);
+    ctx.arcTo(x, y + h, x, y + h - rBottomLeft, rBottomLeft);
+    ctx.lineTo(x, y + rTopLeft);
+    ctx.arcTo(x, y, x + rTopLeft, y, rTopLeft);
+    ctx.closePath();
   }
 });

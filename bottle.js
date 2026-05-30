@@ -92,23 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Touch support
     canvas.addEventListener('touchstart', (e) => {
+      if (e.cancelable) e.preventDefault();
       const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      // Emulate mouse coordinate mapping
-      const clientX = (touch.clientX - rect.left) * (canvas.width / rect.width);
-      const clientY = (touch.clientY - rect.top) * (canvas.height / rect.height);
-      
-      handleMouseDown({ clientX, clientY, preventDefault: () => e.preventDefault() });
-    });
+      handleMouseDown(touch);
+    }, { passive: false });
     
     canvas.addEventListener('touchmove', (e) => {
+      if (e.cancelable) e.preventDefault();
       const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const clientX = (touch.clientX - rect.left) * (canvas.width / rect.width);
-      const clientY = (touch.clientY - rect.top) * (canvas.height / rect.height);
-      
-      handleMouseMove({ clientX, clientY, preventDefault: () => e.preventDefault() });
-    });
+      handleMouseMove(touch);
+    }, { passive: false });
     
     document.addEventListener('touchend', () => {
       handleMouseUp();
@@ -420,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dy = y - SLING_Y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist < BALL_RADIUS + 15) {
+    if (dist < BALL_RADIUS + 25) {
       ball.isDragged = true;
       mouse.x = x;
       mouse.y = y;
@@ -430,7 +423,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMouseMove(e) {
     if (!ball.isDragged || isGameOver) return;
-    if (e.preventDefault) e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') {
+      try {
+        e.preventDefault();
+      } catch (err) {
+        // ignore
+      }
+    }
 
     const rect = canvas.getBoundingClientRect();
     let x, y;

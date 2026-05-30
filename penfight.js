@@ -1,4 +1,4 @@
-// --- Pen Fight Gameplay & Physics ---
+// --- Upgraded Pen Fight Gameplay & Physics ---
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('pen-canvas');
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Constants ---
   const FRICTION = 0.965; // sliding friction factor
-  const TABLE = { x: 70, y: 65, w: 460, h: 270 }; // boundaries of wood table
+  const TABLE = { x: 30, y: 30, w: 540, h: 320 }; // BIG boundaries of wood table (canvas is 600x400)
   const PEN_LENGTH = 65;
   const PEN_RADIUS = 7;
   const MAX_AIM_DIST = 100;
@@ -34,12 +34,52 @@ document.addEventListener('DOMContentLoaded', () => {
   let gameState = 'aiming'; // aiming | rolling | gameOver
   let scoreP1 = parseInt(localStorage.getItem('pen-score-p1') || '0', 10);
   let scoreP2 = parseInt(localStorage.getItem('pen-score-p2') || '0', 10);
+  
+  let currentLevel = 1;
+  const maxLevels = 5;
+  let obstacles = []; // circular pegs: { x, y, r }
+
+  // Level configuration layouts
+  const LEVEL_CONFIGS = {
+    1: { obstacles: [] }, // Pure duel
+    2: { 
+      obstacles: [
+        { x: 300, y: 190, r: 24 } // 1 large central peg
+      ] 
+    },
+    3: { 
+      obstacles: [
+        { x: 300, y: 105, r: 16 }, // Vertical line of 3 pegs
+        { x: 300, y: 190, r: 20 }, 
+        { x: 300, y: 275, r: 16 }
+      ] 
+    },
+    4: { 
+      obstacles: [
+        { x: 230, y: 190, r: 16 }, // Central diamond layout
+        { x: 370, y: 190, r: 16 },
+        { x: 300, y: 110, r: 16 },
+        { x: 300, y: 270, r: 16 }
+      ] 
+    },
+    5: { 
+      obstacles: [
+        { x: 190, y: 110, r: 14 }, // Complex maze of 7 pegs
+        { x: 410, y: 110, r: 14 },
+        { x: 300, y: 190, r: 24 },
+        { x: 190, y: 270, r: 14 },
+        { x: 410, y: 270, r: 14 },
+        { x: 300, y: 80, r: 12 },
+        { x: 300, y: 300, r: 12 }
+      ] 
+    }
+  };
 
   // Pens
-  let pen1 = { x: 180, y: 200, vx: 0, vy: 0, theta: 0, omega: 0, color: 'var(--accent-cyan)', shadowColor: 'rgba(0, 242, 254, 0.4)', isFalling: false, scale: 1 };
-  let pen2 = { x: 420, y: 200, vx: 0, vy: 0, theta: Math.PI, omega: 0, color: 'var(--accent-pink)', shadowColor: 'rgba(248, 87, 166, 0.4)', isFalling: false, scale: 1 };
+  let pen1 = { x: 160, y: 190, vx: 0, vy: 0, theta: 0, omega: 0, color: 'var(--accent-cyan)', shadowColor: 'rgba(0, 242, 254, 0.4)', isFalling: false, scale: 1 };
+  let pen2 = { x: 440, y: 190, vx: 0, vy: 0, theta: Math.PI, omega: 0, color: 'var(--accent-pink)', shadowColor: 'rgba(248, 87, 166, 0.4)', isFalling: false, scale: 1 };
 
-  // Mouse / Drag state
+  // Mouse / Drag state (slingshot pull mechanics)
   let isDragging = false;
   let dragStart = { x: 0, y: 0 };
   let dragCurrent = { x: 0, y: 0 };
@@ -60,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modePvpBtn.classList.remove('active');
       isAiMode = true;
       p2Label.innerText = "COMPUTER (PINK)";
+      currentLevel = 1;
       resetMatch();
     });
 
@@ -70,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modeAiBtn.classList.remove('active');
       isAiMode = false;
       p2Label.innerText = "PLAYER 2 (PINK)";
+      currentLevel = 1;
       resetMatch();
     });
 
@@ -88,6 +130,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btnOverlayAction.addEventListener('click', () => {
       if (typeof arcadeSounds !== 'undefined') arcadeSounds.playClick();
       gameOverlay.classList.add('hidden');
+      
+      // Level progression logic
+      if (overlayTitle.innerText.includes("CLEAR")) {
+        if (currentLevel < maxLevels) {
+          currentLevel++;
+        } else {
+          currentLevel = 1; // restart campaign
+        }
+      }
       resetMatch();
     });
 
@@ -96,22 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
 
-    // Touch Support
+    // Touch Support (Direct client coordinates passed, { passive: false })
     canvas.addEventListener('touchstart', (e) => {
+      if (e.cancelable) e.preventDefault();
       const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const clientX = (touch.clientX - rect.left) * (canvas.width / rect.width);
-      const clientY = (touch.clientY - rect.top) * (canvas.height / rect.height);
-      handleMouseDown({ clientX, clientY, preventDefault: () => e.preventDefault() });
-    });
+      handleMouseDown(touch);
+    }, { passive: false });
     canvas.addEventListener('touchmove', (e) => {
+      if (e.cancelable) e.preventDefault();
       const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const clientX = (touch.clientX - rect.left) * (canvas.width / rect.width);
-      const clientY = (touch.clientY - rect.top) * (canvas.height / rect.height);
-      handleMouseMove({ clientX, clientY, preventDefault: () => e.preventDefault() });
-    });
-    canvas.addEventListener('touchend', () => {
+      handleMouseMove(touch);
+    }, { passive: false });
+    document.addEventListener('touchend', () => {
       handleMouseUp();
     });
 
@@ -122,8 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function resetMatch() {
-    pen1.x = 180;
-    pen1.y = 200;
+    // Reset positions (centered slightly left/right)
+    pen1.x = 150;
+    pen1.y = 190;
     pen1.vx = 0;
     pen1.vy = 0;
     pen1.theta = 0;
@@ -131,14 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
     pen1.isFalling = false;
     pen1.scale = 1;
 
-    pen2.x = 420;
-    pen2.y = 200;
+    pen2.x = 450;
+    pen2.y = 190;
     pen2.vx = 0;
     pen2.vy = 0;
     pen2.theta = Math.PI;
     pen2.omega = 0;
     pen2.isFalling = false;
     pen2.scale = 1;
+
+    // Load obstacles for current level
+    obstacles = LEVEL_CONFIGS[currentLevel].obstacles.map(o => ({ ...o }));
 
     currentPlayer = 1;
     gameState = 'aiming';
@@ -152,14 +203,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateHUDText() {
+    // Update level display
+    document.getElementById('hud-level').innerText = `${currentLevel} / ${maxLevels}`;
+
     if (gameState === 'gameOver') return;
 
     if (currentPlayer === 1) {
-      statusText.innerText = "YOUR TURN (FLICK CYAN PEN)";
+      statusText.innerText = "YOUR TURN (PULL BACK CYAN PEN)";
       statusText.style.color = 'var(--accent-cyan)';
       statusText.style.textShadow = '0 0 10px rgba(0, 242, 254, 0.4)';
     } else {
-      statusText.innerText = isAiMode ? "COMPUTER IS THINKING..." : "PLAYER 2'S TURN (FLICK PINK PEN)";
+      statusText.innerText = isAiMode ? "COMPUTER IS THINKING..." : "PLAYER 2'S TURN (PULL BACK PINK PEN)";
       statusText.style.color = 'var(--accent-pink)';
       statusText.style.textShadow = '0 0 10px rgba(248, 87, 166, 0.4)';
     }
@@ -181,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Resolve Collisions
     if (gameState === 'rolling' && !pen1.isFalling && !pen2.isFalling) {
       resolveCollisions();
+      resolveObstacleCollisions();
     }
 
     // 3. Desk Boundaries Check
@@ -299,9 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pen2.vy += jImp * ny;
 
             // Simple rotational response based on where it was hit
-            // i represents P1 segment hit (0: tail, 1: center, 2: head)
-            // j represents P2 segment hit
-            const torque1 = (i - 1) * jImp * 0.08; // middle segment (1) produces 0 torque
+            const torque1 = (i - 1) * jImp * 0.08; 
             const torque2 = (j - 1) * jImp * 0.08;
 
             pen1.omega -= torque1;
@@ -318,7 +371,62 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof arcadeSounds !== 'undefined') {
               arcadeSounds.playTimerBeep();
             }
-            return; // stop evaluating other circle pairs this frame
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  // --- Pen-to-Circular Obstacle Collision Resolver ---
+  function resolveObstacleCollisions() {
+    obstacles.forEach(obs => {
+      checkPenObstacleCollision(pen1, obs);
+      checkPenObstacleCollision(pen2, obs);
+    });
+  }
+
+  function checkPenObstacleCollision(pen, obs) {
+    if (pen.isFalling) return;
+
+    const r = PEN_RADIUS;
+    const spheres = getPenSpheres(pen);
+
+    for (let i = 0; i < 3; i++) {
+      const s = spheres[i];
+      const dx = s.x - obs.x;
+      const dy = s.y - obs.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const minDist = r + obs.r;
+
+      if (dist < minDist) {
+        // Collision!
+        const nx = dx / dist; // normal pointing from peg to pen sphere
+        const ny = dy / dist;
+
+        // Velocity along normal
+        const velAlongNormal = pen.vx * nx + pen.vy * ny;
+
+        if (velAlongNormal < 0) {
+          const restitution = 0.85;
+          const impulse = -(1 + restitution) * velAlongNormal;
+
+          // Apply bouncing velocity
+          pen.vx += impulse * nx;
+          pen.vy += impulse * ny;
+
+          // Add torque spin based on segment hit
+          const torque = (i - 1) * impulse * 0.07;
+          pen.omega += torque;
+
+          // Separate overlap
+          const overlap = minDist - dist;
+          pen.x += nx * overlap;
+          pen.y += ny * overlap;
+
+          // Play bounce tick
+          if (typeof arcadeSounds !== 'undefined') {
+            arcadeSounds.playTimerBeep();
           }
         }
       }
@@ -340,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Turn Logic & AI ---
 
   function triggerAiFlick() {
-    if (gameState !== 'aiming' || isGameOver) return;
+    if (gameState !== 'aiming') return;
 
     // AI calculates vector to aim directly at player pen
     const dx = pen1.x - pen2.x;
@@ -349,13 +457,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let aimAngle = Math.atan2(dy, dx);
     
-    // Add minor random aiming error (medium difficulty)
-    aimAngle += (Math.random() - 0.5) * 0.12;
+    // Add minor random aiming error (based on current level difficulty scaling)
+    const errorScale = 0.16 - (currentLevel * 0.02);
+    aimAngle += (Math.random() - 0.5) * errorScale;
 
     // Power depends on distance
     const power = Math.min(10.5, dist * 0.016 + 2.5);
 
-    // Apply force
+    // Apply force (Opposite of aim is not needed for AI calculation; AI directly flicks towards target)
     pen2.vx = Math.cos(aimAngle) * power;
     pen2.vy = Math.sin(aimAngle) * power;
     pen2.omega = (Math.random() - 0.5) * 0.25;
@@ -381,37 +490,38 @@ document.addEventListener('DOMContentLoaded', () => {
       winner = 1;
     }
 
-    // Update scoreboard
+    // Update scoreboard & overlay text
     if (winner === 1) {
       scoreP1++;
       localStorage.setItem('pen-score-p1', scoreP1.toString());
       scoreP1Val.innerText = scoreP1;
       
-      overlayTitle.innerText = "PLAYER 1 WINS!";
-      overlayDesc.innerText = isAiMode ? "You knocked the computer off the desk!" : "Player 2 fell off the desk!";
+      overlayTitle.innerText = "LEVEL CLEAR!";
+      overlayDesc.innerText = `You knocked the opponent off the desk!`;
       overlayTitle.style.color = 'var(--accent-cyan)';
+      btnOverlayAction.innerText = currentLevel < maxLevels ? "NEXT LEVEL" : "PLAY AGAIN";
+
+      if (typeof arcadeSounds !== 'undefined') arcadeSounds.playWin();
     } else {
       scoreP2++;
       localStorage.setItem('pen-score-p2', scoreP2.toString());
       scoreP2Val.innerText = scoreP2;
       
-      overlayTitle.innerText = isAiMode ? "COMPUTER WINS!" : "PLAYER 2 WINS!";
-      overlayDesc.innerText = isAiMode ? "Your pen was knocked off the desk!" : "Player 1 fell off the desk!";
+      overlayTitle.innerText = "LEVEL FAILED";
+      overlayDesc.innerText = isAiMode ? "Your pen fell off the desk!" : "Player 2 knocked you off!";
       overlayTitle.style.color = 'var(--accent-pink)';
+      btnOverlayAction.innerText = "RETRY LEVEL";
+
+      if (typeof arcadeSounds !== 'undefined') arcadeSounds.playFail();
     }
 
     gameOverlay.classList.remove('hidden');
-
-    if (typeof arcadeSounds !== 'undefined') {
-      if (winner === 1 || !isAiMode) arcadeSounds.playWin();
-      else arcadeSounds.playFail();
-    }
   }
 
-  // --- Input Handlers (Flicking Aim) ---
+  // --- Input Handlers (Flicking Slingshot pull) ---
 
   function handleMouseDown(e) {
-    if (gameState !== 'aiming' || isGameOver) return;
+    if (gameState !== 'aiming') return;
     if (isAiMode && currentPlayer === 2) return; // Computer's turn
 
     const rect = canvas.getBoundingClientRect();
@@ -423,14 +533,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Check if clicked near the active player's pen center
+    // Check if clicked near the active player's pen center (generous 57.5px radius)
     const activePen = (currentPlayer === 1) ? pen1 : pen2;
     const dx = x - activePen.x;
     const dy = y - activePen.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Aim click area is slightly larger than pen radius for easy grabbing
-    if (dist < PEN_LENGTH / 2 + 10) {
+    if (dist < PEN_LENGTH / 2 + 25) {
       isDragging = true;
       dragStart.x = activePen.x;
       dragStart.y = activePen.y;
@@ -443,7 +552,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMouseMove(e) {
     if (!isDragging || gameState !== 'aiming') return;
-    if (e.preventDefault) e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') {
+      try {
+        e.preventDefault();
+      } catch (err) {
+        // ignore
+      }
+    }
 
     const rect = canvas.getBoundingClientRect();
     let x, y;
@@ -464,14 +579,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activePen = (currentPlayer === 1) ? pen1 : pen2;
     
-    // Flick vector (flick is in direction of drag line, e.g. drawing an arrow from pen center to cursor)
-    const dx = dragCurrent.x - dragStart.x;
-    const dy = dragCurrent.y - dragStart.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    // Slingshot pull: flick is in the OPPOSITE direction of the drag vector
+    const pullDx = dragCurrent.x - dragStart.x;
+    const pullDy = dragCurrent.y - dragStart.y;
+    const dist = Math.sqrt(pullDx * pullDx + pullDy * pullDy);
 
     if (dist > 5) {
-      // Calculate velocity
-      const angle = Math.atan2(dy, dx);
+      // Launch vector is opposite
+      const launchDx = -pullDx;
+      const launchDy = -pullDy;
+      const angle = Math.atan2(launchDy, launchDx);
+      
       // Cap aim power
       const power = Math.min(10.5, dist * 0.12);
 
@@ -496,9 +614,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. Draw Desk / Table Playground
-    // Border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    // 1. Draw Desk Border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
@@ -514,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
 
     // Table wood-line decorations inside
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.01)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.012)';
     ctx.lineWidth = 1;
     for (let i = TABLE.x + 30; i < TABLE.x + TABLE.w; i += 30) {
       ctx.beginPath();
@@ -523,34 +640,68 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.stroke();
     }
 
-    // 2. Draw Aim Line (if dragging)
+    // 2. Draw Obstacles (Circular Neon Pegs/Erasers)
+    obstacles.forEach(obs => {
+      ctx.save();
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'var(--accent-yellow)';
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.12)';
+      ctx.strokeStyle = 'var(--accent-yellow)';
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+      ctx.arc(obs.x, obs.y, obs.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      
+      // Draw inner concentric details for 3D coin look
+      ctx.beginPath();
+      ctx.arc(obs.x, obs.y, obs.r * 0.6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // 3. Draw Aim / Tension Indicator (if dragging)
     if (isDragging) {
       const activePen = (currentPlayer === 1) ? pen1 : pen2;
-      const dx = dragCurrent.x - dragStart.x;
-      const dy = dragCurrent.y - dragStart.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const pullDx = dragCurrent.x - dragStart.x;
+      const pullDy = dragCurrent.y - dragStart.y;
+      const dist = Math.sqrt(pullDx * pullDx + pullDy * pullDy);
 
       if (dist > 5) {
         ctx.save();
-        ctx.strokeStyle = activePen.color;
-        ctx.lineWidth = 2;
-        ctx.setLineDash([4, 4]);
         ctx.shadowBlur = 8;
         ctx.shadowColor = activePen.color;
 
-        // Draw aiming line
+        // Draw tension line (backwards to drag cursor - Pink indicator)
+        ctx.strokeStyle = 'rgba(248, 87, 166, 0.3)';
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(activePen.x, activePen.y);
         ctx.lineTo(dragCurrent.x, dragCurrent.y);
         ctx.stroke();
 
-        // Draw arrowhead at end
-        const angle = Math.atan2(dy, dx);
+        // Draw launch prediction arrow (opposite to drag cursor - Active player color)
+        const launchDx = -pullDx;
+        const launchDy = -pullDy;
+        const launchX = activePen.x + launchDx;
+        const launchY = activePen.y + launchDy;
+
+        ctx.strokeStyle = activePen.color;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(activePen.x, activePen.y);
+        ctx.lineTo(launchX, launchY);
+        ctx.stroke();
+
+        // Arrow head at end of launch projection
+        const angle = Math.atan2(launchDy, launchDx);
         ctx.fillStyle = activePen.color;
         ctx.beginPath();
-        ctx.moveTo(dragCurrent.x, dragCurrent.y);
-        ctx.lineTo(dragCurrent.x - 10 * Math.cos(angle - Math.PI/6), dragCurrent.y - 10 * Math.sin(angle - Math.PI/6));
-        ctx.lineTo(dragCurrent.x - 10 * Math.cos(angle + Math.PI/6), dragCurrent.y - 10 * Math.sin(angle + Math.PI/6));
+        ctx.moveTo(launchX, launchY);
+        ctx.lineTo(launchX - 12 * Math.cos(angle - Math.PI/6), launchY - 12 * Math.sin(angle - Math.PI/6));
+        ctx.lineTo(launchX - 12 * Math.cos(angle + Math.PI/6), launchY - 12 * Math.sin(angle + Math.PI/6));
         ctx.closePath();
         ctx.fill();
 
@@ -558,9 +709,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 3. Draw Pens
+    // 4. Draw Pens
     drawPen(pen1);
     drawPen(pen2);
+  }
+
+  function drawRoundRect(ctx, x, y, w, h, r) {
+    let rTopLeft = 0, rTopRight = 0, rBottomRight = 0, rBottomLeft = 0;
+    if (typeof r === 'number') {
+      rTopLeft = rTopRight = rBottomRight = rBottomLeft = r;
+    } else if (Array.isArray(r)) {
+      rTopLeft = r[0] !== undefined ? r[0] : 0;
+      rTopRight = r[1] !== undefined ? r[1] : 0;
+      rBottomRight = r[2] !== undefined ? r[2] : 0;
+      rBottomLeft = r[3] !== undefined ? r[3] : 0;
+    } else if (typeof r === 'object') {
+      rTopLeft = r.tl !== undefined ? r.tl : 0;
+      rTopRight = r.tr !== undefined ? r.tr : 0;
+      rBottomRight = r.br !== undefined ? r.br : 0;
+      rBottomLeft = r.bl !== undefined ? r.bl : 0;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(x + rTopLeft, y);
+    ctx.lineTo(x + w - rTopRight, y);
+    ctx.arcTo(x + w, y, x + w, y + rTopRight, rTopRight);
+    ctx.lineTo(x + w, y + h - rBottomRight, rBottomRight);
+    ctx.arcTo(x + w, y + h, x + w - rBottomRight, y + h, rBottomRight);
+    ctx.lineTo(x + rBottomLeft, y + h);
+    ctx.arcTo(x, y + h, x, y + h - rBottomLeft, rBottomLeft);
+    ctx.lineTo(x, y + rTopLeft);
+    ctx.arcTo(x, y, x + rTopLeft, y, rTopLeft);
+    ctx.closePath();
   }
 
   function drawPen(pen) {
@@ -581,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Draw Capsule pen body (rounded rectangle)
     ctx.beginPath();
-    ctx.roundRect(-L/2, -r, L, r * 2, r);
+    drawRoundRect(ctx, -L/2, -r, L, r * 2, r);
     ctx.fill();
 
     // Reset shadow for details
@@ -590,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Draw Cap on head (contrasting darker strip)
     ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
     ctx.beginPath();
-    ctx.roundRect(L/2 - 20, -r, 16, r * 2, [0, r, r, 0]);
+    drawRoundRect(ctx, L/2 - 20, -r, 16, r * 2, [0, r, r, 0]);
     ctx.fill();
 
     // Draw clip on cap

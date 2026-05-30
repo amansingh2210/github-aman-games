@@ -56,7 +56,7 @@
 /* Scoreboard */
 .scoreboard-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1.2fr 2fr;
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -147,6 +147,7 @@
 .game-overlay.hidden {
   opacity: 0;
   pointer-events: none;
+  display: none !important;
 }
 
 .overlay-content {
