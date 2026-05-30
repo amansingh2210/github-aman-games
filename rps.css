@@ -1,0 +1,257 @@
+/* --- Neon Rock Paper Scissors CSS --- */
+
+.game-settings, .scoreboard-container, .arena-container, .weapons-grid, .game-actions {
+  width: 100%;
+  max-width: 520px;
+}
+
+.game-settings {
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.segmented-control button {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.segmented-control button.active {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Scoreboard */
+.scoreboard-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.score-card {
+  padding: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.score-val {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.player-1-score { border-color: rgba(0, 242, 254, 0.25); }
+.player-2-score { border-color: rgba(248, 87, 166, 0.25); }
+
+/* Arena Styling */
+.arena-container {
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.battle-arena {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fighter-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 120px;
+}
+
+.weapon-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(5, 2, 12, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+  transition: all var(--transition-fast);
+}
+
+.p1-slot .weapon-icon.active {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+}
+
+.p2-slot .weapon-icon.active {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 15px rgba(248, 87, 166, 0.4);
+}
+
+.slot-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vs-divider {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-style: italic;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.result-banner {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  width: 100%;
+}
+
+.result-banner.win { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
+.result-banner.lose { color: var(--accent-pink); text-shadow: 0 0 10px rgba(248, 87, 166, 0.3); }
+.result-banner.draw { color: var(--accent-yellow); text-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+
+/* Choices Grid */
+.weapons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.weapon-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.weapon-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-icon {
+  font-size: 2.2rem;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Card custom colors on hover/active */
+.weapon-card.r-card:hover { border-color: var(--accent-pink); box-shadow: 0 0 12px rgba(248, 87, 166, 0.2); color: var(--accent-pink); }
+.weapon-card.p-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(0, 242, 254, 0.2); color: var(--accent-cyan); }
+.weapon-card.s-card:hover { border-color: var(--accent-purple); box-shadow: 0 0 12px rgba(139, 92, 246, 0.2); color: var(--accent-purple); }
+
+/* Battle Shake Animations */
+.shake-p1 { animation: shake-left 0.4s ease infinite alternate; }
+.shake-p2 { animation: shake-right 0.4s ease infinite alternate; }
+
+@keyframes shake-left {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-20deg); }
+}
+
+@keyframes shake-right {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(20deg); }
+}
+
+.game-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.game-actions button {
+  flex: 1;
+}
+
+/* Responsive adjust */
+@media (max-width: 580px) {
+  .game-settings, .scoreboard-container, .arena-container, .weapons-grid, .game-actions {
+    max-width: 95vw;
+  }
+  .weapon-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2.2rem;
+  }
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whack-A-Mole - Aman's Arcade</title>
+  <meta name="description" content="Test your reflexes in Whack-A-Mole. Whack glowing digital moles, score points, avoid bomb hazards, and chase the high score in this neon arcade game.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="whackamole.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">WHACK A MOLE</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- HUD Dashboard -->
+    <section class="game-hud glass-panel fade-in">
+      <div class="hud-item">
+        <span class="hud-label">TIME LEFT</span>
+        <span class="hud-val" id="time-left">30s</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span class="hud-val" id="current-score">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">HIGH SCORE</span>
+        <span class="hud-val" id="high-score">0</span>
+      </div>
+    </section>
+
+    <!-- Mole Grid Container -->
+    <section class="grid-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="mole-grid" id="mole-grid">
+        <!-- 9 interactive holes -->
+        <div class="mole-hole" data-idx="0">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="1">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="2">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="3">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="4">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="5">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="6">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="7">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+        <div class="mole-hole" data-idx="8">
+          <div class="mole"></div>
+          <div class="hole-rim"></div>
+        </div>
+      </div>
+      
+      <!-- Start/Game Over Overlay -->
+      <div id="game-overlay" class="game-overlay">
+        <div class="overlay-content">
+          <h2 id="overlay-title">DIGITAL WHACK</h2>
+          <p id="overlay-desc">Hit the glowing critters. Avoid the red bomb alerts!</p>
+          <button class="btn-primary" id="btn-start">START MATCH</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.15s;">
+      <button class="btn-secondary" id="btn-restart">RESTART</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="whackamole.js"></script>
+</body>
+</html>

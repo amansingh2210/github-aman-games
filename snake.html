@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Snake - Aman's Arcade</title>
+  <meta name="description" content="Play retro neon Snake. Avoid walls, eat glowing food, score points, and experience beautiful particle effects in your browser. Mobile responsive.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="snake.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">NEON SNAKE</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Scoreboard -->
+    <section class="game-hud glass-panel fade-in">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span class="hud-val" id="current-score">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SPEED</span>
+        <span class="hud-val" id="snake-speed">1x</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">HIGH SCORE</span>
+        <span class="hud-val" id="high-score">0</span>
+      </div>
+    </section>
+
+    <!-- Game Board -->
+    <section class="board-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="canvas-wrapper">
+        <canvas id="game-canvas" width="400" height="400"></canvas>
+        <div id="game-overlay" class="game-overlay">
+          <div class="overlay-content">
+            <h2 id="overlay-title">SNAKE ARCADE</h2>
+            <p id="overlay-desc">Press Start or use controls to begin</p>
+            <button class="btn-primary" id="btn-start">START GAME</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mobile Virtual Controls -->
+    <section class="virtual-controls fade-in" style="animation-delay: 0.15s;">
+      <button class="ctrl-btn up" id="ctrl-up" aria-label="Up">▲</button>
+      <button class="ctrl-btn left" id="ctrl-left" aria-label="Left">◀</button>
+      <button class="ctrl-btn right" id="ctrl-right" aria-label="Right">▶</button>
+      <button class="ctrl-btn down" id="ctrl-down" aria-label="Down">▼</button>
+    </section>
+
+    <!-- Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.2s;">
+      <button class="btn-secondary" id="btn-restart">RESTART</button>
+      <button class="btn-secondary" id="btn-toggle-grid">TOGGLE GRID</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="snake.js"></script>
+</body>
+</html>

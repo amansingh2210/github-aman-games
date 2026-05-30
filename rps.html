@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors AI - Aman's Arcade</title>
+  <meta name="description" content="Play Rock Paper Scissors. Face off against an adaptive AI CPU that predicts your patterns, or play local PvP. Beautiful neon graphics and retro sounds.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="rps.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">NEON SHOBUSEN (RPS)</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Game Mode selector -->
+    <section class="game-settings glass-panel fade-in">
+      <div class="setting-group">
+        <span class="setting-label">Game Mode</span>
+        <div class="segmented-control">
+          <button id="mode-ai" class="control-btn active">VS ADAPTIVE CPU</button>
+          <button id="mode-pvp" class="control-btn">2 PLAYERS (LOCAL)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scoreboard Dashboard -->
+    <section class="scoreboard-container fade-in" style="animation-delay: 0.05s;">
+      <div class="score-card glass-panel player-1-score">
+        <span class="score-label" id="p1-label">PLAYER 1</span>
+        <span class="score-val" id="score-p1">0</span>
+      </div>
+      <div class="score-card glass-panel ties-score">
+        <span class="score-label">DRAWS</span>
+        <span class="score-val" id="score-ties">0</span>
+      </div>
+      <div class="score-card glass-panel player-2-score">
+        <span class="score-label" id="p2-label">ADAPTIVE CPU</span>
+        <span class="score-val" id="score-p2">0</span>
+      </div>
+    </section>
+
+    <!-- Arena zone (Face-off) -->
+    <section class="arena-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      
+      <!-- Hands Battle Arena -->
+      <div class="battle-arena">
+        
+        <!-- Player 1 Slot -->
+        <div class="fighter-slot p1-slot" id="p1-slot">
+          <div class="weapon-icon" id="p1-weapon">?</div>
+          <span class="slot-label" id="p1-slot-label">P1 Ready</span>
+        </div>
+
+        <!-- VS Divider -->
+        <div class="vs-divider">VS</div>
+
+        <!-- Player 2 Slot -->
+        <div class="fighter-slot p2-slot" id="p2-slot">
+          <div class="weapon-icon" id="p2-weapon">?</div>
+          <span class="slot-label" id="p2-slot-label">CPU Ready</span>
+        </div>
+
+      </div>
+
+      <!-- Result Banner -->
+      <div class="result-banner" id="round-result">
+        CHOOSE YOUR WEAPON
+      </div>
+
+    </section>
+
+    <!-- Choices Grid -->
+    <section class="weapons-grid fade-in" style="animation-delay: 0.15s;" id="weapons-choices">
+      <button class="weapon-card r-card" data-weapon="rock">
+        <div class="card-icon">✊</div>
+        <span class="card-title">ROCK</span>
+      </button>
+      <button class="weapon-card p-card" data-weapon="paper">
+        <div class="card-icon">✋</div>
+        <span class="card-title">PAPER</span>
+      </button>
+      <button class="weapon-card s-card" data-weapon="scissors">
+        <div class="card-icon">✌️</div>
+        <span class="card-title">SCISSORS</span>
+      </button>
+    </section>
+
+    <!-- Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.2s;">
+      <button class="btn-secondary" id="btn-reset-scores">RESET SCORES</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="rps.js"></script>
+</body>
+</html>

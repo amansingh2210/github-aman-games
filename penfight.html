@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pen Fight Arena - Aman's Arcade</title>
+  <meta name="description" content="Play the retro schoolroom Pen Fight game in your browser. Flick your pen to knock the opponent's pen off the desk. Play local PvP or challenge the AI.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="penfight.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">PEN FIGHT</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Settings Panel -->
+    <section class="game-settings glass-panel fade-in">
+      <div class="setting-group">
+        <span class="setting-label">Game Mode</span>
+        <div class="segmented-control">
+          <button id="mode-ai" class="control-btn active">VS COMPUTER</button>
+          <button id="mode-pvp" class="control-btn">2 PLAYERS (LOCAL)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scoreboard HUD -->
+    <section class="scoreboard-container glass-panel fade-in" style="animation-delay: 0.05s;">
+      <div class="score-card player-1-score">
+        <span class="score-label" id="p1-label">PLAYER 1 (CYAN)</span>
+        <span class="score-val" id="score-p1">0</span>
+      </div>
+      <div class="score-card player-2-score">
+        <span class="score-label" id="p2-label">COMPUTER (PINK)</span>
+        <span class="score-val" id="score-p2">0</span>
+      </div>
+    </section>
+
+    <!-- Status Banner -->
+    <div class="status-banner glass-panel fade-in" style="animation-delay: 0.1s;" id="status-text">
+      YOUR TURN (FLICK PEN)
+    </div>
+
+    <!-- Gameplay Sandbox Area -->
+    <section class="board-container glass-panel fade-in" style="animation-delay: 0.15s;">
+      <div class="canvas-wrapper">
+        <canvas id="pen-canvas" width="600" height="400"></canvas>
+        
+        <!-- Game Over screen overlay -->
+        <div id="game-overlay" class="game-overlay hidden">
+          <div class="overlay-content">
+            <h2 id="overlay-title">PLAYER 1 WINS!</h2>
+            <p id="overlay-desc">Opponent pen fell off the desk!</p>
+            <button class="btn-primary" id="btn-overlay-action">RESTART MATCH</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reset stats button -->
+    <section class="game-actions fade-in" style="animation-delay: 0.2s;">
+      <button class="btn-secondary" id="btn-reset-scores">RESET SCORES</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="penfight.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplayer Quiz - Aman's Arcade</title>
+  <meta name="description" content="Test your trivia knowledge against friends locally. Multi-player turn-based setup with custom names, categories, and vibrant neon scorecards.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">NEON QUIZ</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- 1. SETUP PANEL -->
+    <section id="setup-panel" class="setup-container glass-panel fade-in">
+      <h2>QUIZ SETUP</h2>
+      
+      <div class="setup-row">
+        <label class="setup-label">Number of Players</label>
+        <div class="segmented-control" id="player-count-control">
+          <button class="count-btn active" data-count="2">2 PLAYERS</button>
+          <button class="count-btn" data-count="3">3 PLAYERS</button>
+          <button class="count-btn" data-count="4">4 PLAYERS</button>
+        </div>
+      </div>
+
+      <div class="setup-row">
+        <label class="setup-label">Player Names</label>
+        <div class="player-names-grid" id="player-names-inputs">
+          <div class="name-input-group" data-player="1">
+            <span class="player-indicator p1-dot">●</span>
+            <input type="text" value="Player 1" placeholder="P1 Name" maxlength="12">
+          </div>
+          <div class="name-input-group" data-player="2">
+            <span class="player-indicator p2-dot">●</span>
+            <input type="text" value="Player 2" placeholder="P2 Name" maxlength="12">
+          </div>
+          <div class="name-input-group hidden" data-player="3">
+            <span class="player-indicator p3-dot">●</span>
+            <input type="text" value="Player 3" placeholder="P3 Name" maxlength="12">
+          </div>
+          <div class="name-input-group hidden" data-player="4">
+            <span class="player-indicator p4-dot">●</span>
+            <input type="text" value="Player 4" placeholder="P4 Name" maxlength="12">
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-row">
+        <label class="setup-label">Choose Category</label>
+        <div class="category-grid" id="category-selector">
+          <button class="cat-btn active" data-cat="mixed">Mixed Trivia</button>
+          <button class="cat-btn" data-cat="gaming">Gaming</button>
+          <button class="cat-btn" data-cat="tech">Tech & Code</button>
+          <button class="cat-btn" data-cat="science">Science</button>
+          <button class="cat-btn" data-cat="movies">Movies & TV</button>
+        </div>
+      </div>
+
+      <button class="btn-primary start-quiz-btn" id="btn-start-quiz">LAUNCH QUIZ</button>
+    </section>
+
+    <!-- 2. GAMEPLAY PANEL -->
+    <section id="gameplay-panel" class="gameplay-container hidden">
+      <!-- Turn indicator / Question header -->
+      <div class="quiz-hud-header glass-panel fade-in">
+        <div id="active-player-banner" class="player-turn-banner p1-active">
+          PLAYER 1'S TURN
+        </div>
+        <div class="question-tracker">
+          QUESTION <span id="current-question-num">1</span> / <span id="total-questions-num">10</span>
+        </div>
+      </div>
+
+      <!-- Question Box -->
+      <div class="question-box glass-panel fade-in" style="animation-delay: 0.1s;">
+        <span class="question-cat" id="question-category">GEOGRAPHY</span>
+        <h3 class="question-text" id="question-text">Loading question...</h3>
+      </div>
+
+      <!-- Choices Grid -->
+      <div class="choices-grid fade-in" style="animation-delay: 0.15s;" id="choices-container">
+        <button class="choice-card btn-choice" data-idx="0">
+          <span class="choice-letter">A</span>
+          <span class="choice-text">Option A</span>
+        </button>
+        <button class="choice-card btn-choice" data-idx="1">
+          <span class="choice-letter">B</span>
+          <span class="choice-text">Option B</span>
+        </button>
+        <button class="choice-card btn-choice" data-idx="2">
+          <span class="choice-letter">C</span>
+          <span class="choice-text">Option C</span>
+        </button>
+        <button class="choice-card btn-choice" data-idx="3">
+          <span class="choice-letter">D</span>
+          <span class="choice-text">Option D</span>
+        </button>
+      </div>
+
+      <!-- Bottom Scores Panel -->
+      <div class="quiz-scores-footer fade-in" style="animation-delay: 0.2s;" id="quiz-scores-board">
+        <!-- Player card elements will be generated dynamically -->
+      </div>
+    </section>
+
+    <!-- 3. RESULTS PANEL -->
+    <section id="results-panel" class="results-container glass-panel hidden">
+      <h2>QUIZ CHAMPIONS</h2>
+      <div class="winner-announcement" id="winner-text">
+        PLAYER 1 WINS!
+      </div>
+      
+      <div class="leaderboard-list" id="leaderboard-container">
+        <!-- Leaderboard items injected here -->
+      </div>
+
+      <button class="btn-primary" id="btn-quiz-restart" style="margin-top: 24px;">PLAY AGAIN</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="quiz.js"></script>
+</body>
+</html>

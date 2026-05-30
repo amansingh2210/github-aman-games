@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect 4 AI - Aman's Arcade</title>
+  <meta name="description" content="Play Connect Four in your browser. Play with a friend locally or try to beat our unbeatable Minimax AI. Beautiful neon glow styling and sounds.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="connect4.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">CONNECT FOUR AI</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Settings Group -->
+    <section class="game-settings glass-panel fade-in">
+      <div class="setting-group">
+        <span class="setting-label">Game Mode</span>
+        <div class="segmented-control">
+          <button id="mode-ai" class="control-btn active">VS COMPUTER</button>
+          <button id="mode-pvp" class="control-btn">2 PLAYERS (LOCAL)</button>
+        </div>
+      </div>
+      
+      <div class="setting-group" id="difficulty-group">
+        <span class="setting-label">AI Difficulty</span>
+        <div class="segmented-control">
+          <button class="diff-btn" data-diff="easy">EASY</button>
+          <button class="diff-btn active" data-diff="medium">MEDIUM</button>
+          <button class="diff-btn" data-diff="hard">UNBEATABLE</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scoreboard Section -->
+    <section class="scoreboard-container fade-in" style="animation-delay: 0.1s;">
+      <div class="score-card glass-panel player-x-score">
+        <span class="score-label" id="p1-label">PLAYER 1 (CYAN)</span>
+        <span class="score-val" id="score-p1">0</span>
+      </div>
+      <div class="score-card glass-panel ties-score">
+        <span class="score-label">TIES</span>
+        <span class="score-val" id="score-ties">0</span>
+      </div>
+      <div class="score-card glass-panel player-o-score">
+        <span class="score-label" id="p2-label">COMPUTER (PINK)</span>
+        <span class="score-val" id="score-p2">0</span>
+      </div>
+    </section>
+
+    <!-- Status Banner -->
+    <div class="status-banner glass-panel fade-in" style="animation-delay: 0.15s;" id="status-text">
+      YOUR TURN
+    </div>
+
+    <!-- Game Board Container -->
+    <section class="board-container glass-panel fade-in" style="animation-delay: 0.2s;">
+      <div class="connect4-board" id="c4-board">
+        <!-- 7 interactive column containers, each containing 6 cells -->
+        <div class="board-column" data-col="0">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="1">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="2">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="3">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="4">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="5">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+        <div class="board-column" data-col="6">
+          <div class="board-cell" data-row="5"></div>
+          <div class="board-cell" data-row="4"></div>
+          <div class="board-cell" data-row="3"></div>
+          <div class="board-cell" data-row="2"></div>
+          <div class="board-cell" data-row="1"></div>
+          <div class="board-cell" data-row="0"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.25s;">
+      <button class="btn-primary" id="btn-restart">RESTART MATCH</button>
+      <button class="btn-secondary" id="btn-reset-scores">RESET SCORES</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="connect4.js"></script>
+</body>
+</html>

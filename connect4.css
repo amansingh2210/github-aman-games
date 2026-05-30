@@ -1,0 +1,236 @@
+/* --- Connect 4 AI Styling --- */
+
+.game-settings {
+  width: 100%;
+  max-width: 520px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.segmented-control button {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.segmented-control button.active {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Scoreboard */
+.scoreboard-container {
+  width: 100%;
+  max-width: 520px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.score-card {
+  padding: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.score-val {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.player-x-score { border-color: rgba(0, 242, 254, 0.25); }
+.player-o-score { border-color: rgba(248, 87, 166, 0.25); }
+
+/* Status Banner */
+.status-banner {
+  width: 100%;
+  max-width: 520px;
+  padding: 12px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+  border-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+/* Board Structure */
+.board-container {
+  width: 100%;
+  max-width: 520px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: rgba(15, 10, 36, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.connect4-board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  background: rgba(20, 15, 45, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.board-column {
+  display: flex;
+  flex-direction: column-reverse; /* Row 0 at the bottom, Row 5 at the top */
+  gap: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color var(--transition-fast);
+}
+
+.board-column:hover {
+  background-color: rgba(255, 255, 255, 0.025);
+}
+
+.board-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: #090514;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.8);
+  position: relative;
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+/* Player Discs inside board-cell */
+.board-cell::after {
+  content: '';
+  position: absolute;
+  top: 4%;
+  left: 4%;
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+}
+
+/* Player 1 (Cyan Disc) */
+.board-cell.player-1::after {
+  opacity: 1;
+  transform: scale(1);
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--accent-cyan) 50%, #00849c 95%);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  animation: drop-disc 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Player 2 / AI (Pink Disc) */
+.board-cell.player-2::after {
+  opacity: 1;
+  transform: scale(1);
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--accent-pink) 50%, #b51c6b 95%);
+  box-shadow: 0 0 15px rgba(248, 87, 166, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  animation: drop-disc 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Winning Discs Glow */
+.board-cell.win-cell::after {
+  animation: win-flash 0.8s infinite alternate ease-in-out;
+}
+
+/* Actions Section */
+.game-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+  max-width: 520px;
+}
+
+.game-actions button {
+  flex: 1;
+}
+
+/* Animations */
+@keyframes drop-disc {
+  0% { transform: translateY(-300px); }
+  75% { transform: translateY(10px); }
+  90% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes win-flash {
+  from { filter: brightness(1); box-shadow: 0 0 15px currentColor; }
+  to { filter: brightness(1.4); box-shadow: 0 0 30px currentColor; transform: scale(1.05); }
+}
+
+/* Responsive adjust */
+@media (max-width: 580px) {
+  .game-settings, .scoreboard-container, .status-banner, .board-container, .game-actions {
+    max-width: 95vw;
+  }
+  .board-container {
+    padding: 10px;
+  }
+  .connect4-board {
+    padding: 6px;
+    gap: 4px;
+  }
+  .board-column {
+    gap: 4px;
+  }
+}

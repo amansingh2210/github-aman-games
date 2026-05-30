@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Break the Bottle - Aman's Arcade</title>
+  <meta name="description" content="Play Break the Bottle, a neon physics-based slinging game. Pull back, aim, and shoot glowing spheres to knock down towers and break glass bottles.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="bottle.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">BREAK THE BOTTLE</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Scoreboard / Level HUD -->
+    <section class="game-hud glass-panel fade-in">
+      <div class="hud-item">
+        <span class="hud-label">LEVEL</span>
+        <span class="hud-val" id="hud-level">1 / 3</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SHOTS LEFT</span>
+        <span class="hud-val" id="hud-shots">3 / 3</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">BOTTLES LEFT</span>
+        <span class="hud-val" id="hud-bottles">1</span>
+      </div>
+    </section>
+
+    <!-- Canvas Sandbox Board -->
+    <section class="board-container glass-panel fade-in" style="animation-delay: 0.1s;">
+      <div class="canvas-wrapper">
+        <canvas id="physics-canvas" width="600" height="400"></canvas>
+        
+        <!-- Game State Overlay (Success / Fail) -->
+        <div id="game-overlay" class="game-overlay hidden">
+          <div class="overlay-content">
+            <h2 id="overlay-title">LEVEL CLEAR</h2>
+            <p id="overlay-desc">You broke all the bottles!</p>
+            <button class="btn-primary" id="btn-overlay-action">NEXT LEVEL</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Level Selector Bar -->
+    <section class="level-selectors fade-in" style="animation-delay: 0.15s;">
+      <button class="level-btn active" data-lvl="1">LEVEL 1</button>
+      <button class="level-btn" data-lvl="2">LEVEL 2</button>
+      <button class="level-btn" data-lvl="3">LEVEL 3</button>
+    </section>
+
+    <!-- Reset Actions -->
+    <section class="game-actions fade-in" style="animation-delay: 0.2s;">
+      <button class="btn-secondary" id="btn-reset-level">RESET LEVEL</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="bottle.js"></script>
+</body>
+</html>

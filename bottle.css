@@ -1,0 +1,156 @@
+/* --- Break the Bottle CSS --- */
+
+.game-hud, .board-container, .level-selectors, .game-actions {
+  width: 100%;
+  max-width: 600px;
+}
+
+.game-hud {
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2px;
+}
+
+/* Board Sandboxing Box */
+.board-container {
+  padding: 12px;
+  margin-bottom: 20px;
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 6 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(5, 2, 12, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+#physics-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* Screen States overlay */
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 5, 20, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1;
+  transition: opacity var(--transition-normal);
+  z-index: 5;
+}
+
+.game-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay-content {
+  padding: 24px;
+}
+
+.overlay-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(248, 87, 166, 0.3);
+  letter-spacing: 0.05em;
+}
+
+.overlay-content p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+/* Level Selection tabs */
+.level-selectors {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.level-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  border-radius: 12px;
+  padding: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.level-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.level-btn.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(248, 87, 166, 0.1) 100%);
+  border-color: var(--accent-purple);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+
+.game-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.game-actions button {
+  flex: 1;
+}
+
+/* Responsive adjustment */
+@media (max-width: 640px) {
+  .game-hud, .board-container, .level-selectors, .game-actions {
+    max-width: 95vw;
+  }
+}

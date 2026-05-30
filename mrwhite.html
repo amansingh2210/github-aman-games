@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. White (Social Game) - Aman's Arcade</title>
+  <meta name="description" content="Play Mr. White locally with friends. A pass-and-play social party game of word describing, undercover agents, bluffing, voting, and guessing.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mrwhite.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="arcade-header">
+    <a href="index.html" class="btn-icon" title="Return to Hub">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <div class="arcade-logo">MR. WHITE</div>
+    <div class="header-controls">
+      <button class="btn-icon sound-toggle-btn" title="Mute/Unmute Sounds">
+        <!-- SVG will be injected by shared.js -->
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- 1. SETUP SCREEN -->
+    <section id="setup-screen" class="setup-container glass-panel fade-in">
+      <h2>MR. WHITE SETUP</h2>
+      <p class="game-subtitle">A social party game for 3 to 10 players. Pass and play on the same device.</p>
+      
+      <div class="setup-row">
+        <label class="setup-label">Add Players (3 - 10)</label>
+        <div class="add-player-form">
+          <input type="text" id="player-name-input" placeholder="Enter player name" maxlength="12">
+          <button class="btn-primary" id="btn-add-player">ADD</button>
+        </div>
+        <div class="player-list-chips" id="chips-container">
+          <!-- Player names tags injected here -->
+        </div>
+      </div>
+
+      <button class="btn-primary start-game-btn" id="btn-start-assign" disabled>START ROLE ASSIGNMENT</button>
+    </section>
+
+    <!-- 2. REVEAL CARD SCREEN (PASS & PLAY) -->
+    <section id="reveal-screen" class="reveal-container glass-panel hidden">
+      <div class="player-reveal-banner" id="reveal-prompt-user">
+        PLAYER 1, TAKE THE DEVICE
+      </div>
+      
+      <!-- Card Flip Wrapper -->
+      <div class="card-flipper" id="role-card-flipper">
+        <div class="card-front">
+          <div class="card-inner-glow">
+            <span class="card-question">?</span>
+            <p>Tap to reveal your secret word</p>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-inner-glow">
+            <span class="role-badge" id="card-role-title">CIVILIAN</span>
+            <h3 class="role-word" id="card-role-word">APPLE</h3>
+            <p class="role-desc" id="card-role-desc">Describe this word in exactly 1 word without giving it away to Mr. White.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-card-action">REVEAL WORD</button>
+    </section>
+
+    <!-- 3. GAMEPLAY BOARD -->
+    <section id="game-board" class="board-container glass-panel hidden">
+      <div class="board-header">
+        <h2 id="phase-title">DESCRIBE PHASE</h2>
+        <p id="phase-desc">Describe your word in alphabetical order. Keep it brief!</p>
+      </div>
+
+      <!-- Turn Order / Surviving list -->
+      <div class="survivors-list" id="survivors-container">
+        <!-- Player rows -->
+      </div>
+
+      <!-- Action buttons -->
+      <div class="board-actions" id="board-actions-group">
+        <button class="btn-primary" id="btn-go-to-vote">PROCEED TO VOTE</button>
+      </div>
+    </section>
+
+    <!-- 4. MR. WHITE GUESSING SCREEN -->
+    <section id="guess-screen" class="guess-container glass-panel hidden">
+      <h2>MR. WHITE IS GUESSING!</h2>
+      <p class="game-subtitle">Mr. White has been voted out! But he has a chance to steal the win by guessing the Civilians' word.</p>
+      
+      <div class="guess-form">
+        <span class="guess-label">Select the Civilians' Word:</span>
+        <div class="guess-options-grid" id="guess-choices-grid">
+          <!-- 4 choice buttons -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. END SUMMARY SCREEN -->
+    <section id="summary-screen" class="summary-container glass-panel hidden">
+      <h2 id="summary-winner-title">CIVILIANS WIN!</h2>
+      <div class="summary-details" id="summary-details-box">
+        <!-- Roles table -->
+      </div>
+      <button class="btn-primary" id="btn-mrwhite-restart" style="margin-top: 24px;">PLAY AGAIN</button>
+    </section>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="mrwhite.js"></script>
+</body>
+</html>

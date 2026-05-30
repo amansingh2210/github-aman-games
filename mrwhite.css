@@ -1,0 +1,391 @@
+/* --- Neon Mr. White Party Game CSS --- */
+
+.setup-container, .reveal-container, .board-container, .guess-container, .summary-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.game-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: -12px;
+  margin-bottom: 24px;
+}
+
+/* Player Form & Chip Styling */
+.add-player-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.add-player-form input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.add-player-form input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.player-list-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 80px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px dashed var(--panel-border);
+  border-radius: 12px;
+}
+
+.player-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+  transition: all var(--transition-fast);
+}
+
+.player-chip:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.btn-remove-chip {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.8rem;
+  transition: color var(--transition-fast);
+}
+
+.player-chip:hover .btn-remove-chip {
+  color: #ef4444;
+}
+
+.start-game-btn {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.start-game-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* --- Reveal Card Screen (3D Flip) --- */
+.reveal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.player-reveal-banner {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0,242,254,0.3);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Card Flipper Container */
+.card-flipper {
+  position: relative;
+  width: 250px;
+  height: 340px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-front, .card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-front {
+  background: rgba(139, 92, 246, 0.08);
+  border: 2px dashed var(--accent-purple);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  transform: rotateY(0deg);
+}
+
+.card-back {
+  background: rgba(20, 15, 38, 0.9);
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+  transform: rotateY(180deg);
+}
+
+/* If flipped */
+.card-flipper.flipped .card-front {
+  transform: rotateY(-180deg);
+}
+.card-flipper.flipped .card-back {
+  transform: rotateY(0deg);
+}
+
+.card-inner-glow {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.card-question {
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--accent-purple);
+  text-shadow: 0 0 20px rgba(139,92,246,0.5);
+  margin-bottom: 12px;
+}
+
+.card-front p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role-badge {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #fff;
+  letter-spacing: 0.05em;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0,242,254,0.4);
+}
+
+.role-word {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 20px 0 16px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.role-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- Gameplay Board CSS --- */
+.board-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.board-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  background: linear-gradient(90deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.board-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.survivors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.survivor-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all var(--transition-fast);
+}
+
+.survivor-row.active-turn {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.02);
+}
+
+.survivor-name {
+  font-weight: 600;
+}
+
+.survivor-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.survivor-status.alive {
+  color: var(--accent-cyan);
+}
+
+.survivor-status.voted-out {
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+/* Voting active click trigger list */
+.survivor-row.votable {
+  cursor: pointer;
+}
+
+.survivor-row.votable:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.survivor-row.votable:hover .survivor-status {
+  color: #ef4444;
+}
+
+/* Guessing Screen Grid */
+.guess-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guess-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.guess-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.guess-choice-btn {
+  background: rgba(20, 15, 38, 0.6);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+}
+
+.guess-choice-btn:hover {
+  border-color: var(--accent-yellow);
+  color: var(--accent-yellow);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Summary roles table */
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.summary-role {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.summary-role.civilian { color: var(--accent-cyan); }
+.summary-role.undercover { color: var(--accent-pink); }
+.summary-role.mrwhite { color: var(--accent-yellow); }
+
+.summary-container h2 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 24px;
+}
+
+.summary-container h2.win-civ { background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.summary-container h2.win-und { background: linear-gradient(90deg, var(--accent-pink) 0%, var(--accent-purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.summary-container h2.win-whi { background: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.hidden {
+  display: none !important;
+}
+
+/* Responsive adjust */
+@media (max-width: 580px) {
+  .setup-container, .reveal-container, .board-container, .guess-container, .summary-container {
+    max-width: 95vw;
+    padding: 20px;
+  }
+  .guess-options-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .role-word {
+    font-size: 1.8rem;
+  }
+}

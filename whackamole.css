@@ -1,0 +1,247 @@
+/* --- Neon Whack-A-Mole Styles --- */
+
+.game-hud {
+  width: 100%;
+  max-width: 460px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2px;
+}
+
+/* Grid Board Container */
+.grid-container {
+  width: 100%;
+  max-width: 460px;
+  padding: 16px;
+  margin-bottom: 24px;
+  position: relative;
+  border-radius: 24px;
+  background: rgba(15, 10, 36, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+.mole-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px;
+  aspect-ratio: 1 / 1;
+}
+
+.mole-hole {
+  position: relative;
+  background: rgba(5, 2, 12, 0.7);
+  border-radius: 50% 50% 40% 40%;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 6px 12px rgba(0,0,0,0.8);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  cursor: crosshair;
+}
+
+/* Hole Rim (Visual 3D overlay) */
+.hole-rim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, transparent 0%, rgba(20, 15, 38, 0.95) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* The Moles */
+.mole {
+  width: 76%;
+  height: 85%;
+  position: relative;
+  bottom: -100%; /* Hidden at start */
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(180deg, var(--accent-cyan) 0%, rgba(0, 242, 254, 0.2) 100%);
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+  transition: bottom 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Mole eyes/nose using pseudo-elements */
+.mole::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 18px 0 0 #000; /* Second eye */
+}
+
+.mole::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff5e7e;
+}
+
+/* Mole UP State */
+.mole.up {
+  bottom: 10%;
+}
+
+/* Mole WHACKED State */
+.mole.whacked {
+  bottom: -100% !important;
+  transition: bottom 0.1s ease-out;
+}
+
+/* Mole variations */
+.mole.golden {
+  background: linear-gradient(180deg, var(--accent-yellow) 0%, rgba(245, 158, 11, 0.2) 100%);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.6);
+}
+
+.mole.golden::after {
+  background: #fff;
+}
+
+.mole.bomb {
+  background: linear-gradient(180deg, #ef4444 0%, rgba(239, 68, 68, 0.2) 100%);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+  border-radius: 50%;
+  width: 70%;
+  height: 70%;
+  bottom: -100%;
+}
+
+.mole.bomb::before {
+  /* White X for bomb skull or fuse */
+  content: '⚠';
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: none;
+  background: none;
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.mole.bomb::after {
+  display: none;
+}
+
+/* Screen shake effect on whacking bomb */
+.screen-shake {
+  animation: shake-anim 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake-anim {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+/* Overlay screen */
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 5, 20, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1;
+  transition: opacity var(--transition-normal);
+  z-index: 10;
+}
+
+.game-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay-content {
+  padding: 24px;
+}
+
+.overlay-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+  letter-spacing: 0.05em;
+}
+
+.overlay-content p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+/* Actions */
+.game-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 460px;
+}
+
+.game-actions button {
+  flex: 1;
+}
+
+/* Responsive Scaling */
+@media (max-width: 500px) {
+  .game-hud, .grid-container, .game-actions {
+    max-width: 92vw;
+  }
+  .mole-grid {
+    gap: 8px;
+  }
+}
